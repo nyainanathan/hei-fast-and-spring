@@ -21,7 +21,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<List<Reservation>> saveOrUpdatee(List<Reservation> toSave){
+    public ResponseEntity<?> saveOrUpdatee(List<Reservation> toSave){
 
         boolean isUpdate = false;
 
@@ -42,6 +42,21 @@ public class ReservationController {
             //Otherwise create a new Reservation
 
             if(reservationIndex == -1) {
+
+                //Before creating the new reservaions,
+                //checking if the room is AVAILABLE on the CHOSEN DATE
+                for(Reservation res : reservations) {
+                    if(
+                        res.getRoomNumber() == newRes.getRoomNumber()
+                        &&
+                        res.getReservationDate() == newRes.getReservationDate()
+                    ) {
+                        return new ResponseEntity<>(
+                            "Room " + res.getRoomNumber() +" is already taken on " + res.getReservationDate()
+                            , HttpStatus.BAD_REQUEST );
+                    }
+                }
+
                 reservations.add(newRes);
             } else {
                 reservations.get(reservationIndex).SetEverything(newRes);
