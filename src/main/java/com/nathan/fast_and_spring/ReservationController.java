@@ -43,6 +43,9 @@ public class ReservationController {
 
             if(reservationIndex == -1) {
 
+                if(newRes.getRoomNumber() < 1 || newRes.getRoomNumber() > 9)
+                    return new ResponseEntity<>("You can only chose rooms with number between 1 and 9", HttpStatus.BAD_REQUEST);
+
                 //Before creating the new reservaions,
                 //checking if the room is AVAILABLE on the CHOSEN DATE
                 for(Reservation res : reservations) {
