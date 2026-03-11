@@ -2,6 +2,8 @@ package com.nathan.fast_and_spring;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,12 +16,12 @@ public class ReservationController {
     private List<Reservation> reservations;
 
     @GetMapping
-    public List<Reservation> getReservations(){
-        return this.reservations;
+    public ResponseEntity<List<Reservation>> getReservations(){
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 
     @PostMapping
-    public List<Reservation> saveOrUpdatee(List<Reservation> toSave){
+    public ResponseEntity<List<Reservation>> saveOrUpdatee(List<Reservation> toSave){
 
         for(Reservation newRes : toSave){
 
@@ -44,6 +46,14 @@ public class ReservationController {
             }
         }
 
-        return toSave;
+        List<Integer> idToReturn = toSave.stream()
+                    .map(r -> r.getId())
+                    .toList();
+        
+        List<Reservation> reservationToReturn = reservations.stream()
+        .filter(r -> idToReturn.contains(r.getId()))
+        .toList();
+
+        return new ResponseEntity<>(reservationToReturn, HttpStatus.CREATED);
     }
 }
