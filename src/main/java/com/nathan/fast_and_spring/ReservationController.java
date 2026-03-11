@@ -23,6 +23,8 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<List<Reservation>> saveOrUpdatee(List<Reservation> toSave){
 
+        boolean isUpdate = false;
+
         for(Reservation newRes : toSave){
 
             //Verify if the booking is already present
@@ -43,6 +45,8 @@ public class ReservationController {
                 reservations.add(newRes);
             } else {
                 reservations.get(reservationIndex).SetEverything(newRes);
+                if(isUpdate == false)
+                    isUpdate = true;
             }
         }
 
@@ -54,6 +58,6 @@ public class ReservationController {
         .filter(r -> idToReturn.contains(r.getId()))
         .toList();
 
-        return new ResponseEntity<>(reservationToReturn, HttpStatus.CREATED);
+        return new ResponseEntity<>(reservationToReturn, ( isUpdate ? HttpStatus.OK : HttpStatus.CREATED ));
     }
 }
