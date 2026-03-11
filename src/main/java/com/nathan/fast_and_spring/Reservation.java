@@ -12,6 +12,10 @@ public class Reservation {
     private String roomDescription;
     private LocalDate reservationDate;
 
+    public Reservation(){}
+
+
+
     public Reservation(String clientName, String clientPhoneNumber, String clientEmail,
                        Integer roomNumber, String roomDescription, LocalDate reservationDate) {
         this.clientName = clientName;

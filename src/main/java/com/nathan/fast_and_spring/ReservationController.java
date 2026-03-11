@@ -1,11 +1,13 @@
 package com.nathan.fast_and_spring;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/booking")
 public class ReservationController {
     
-    private List<Reservation> reservations;
+    private List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping
     public ResponseEntity<List<Reservation>> getReservations(){
@@ -21,7 +23,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveOrUpdatee(List<Reservation> toSave){
+    public ResponseEntity<?> saveOrUpdatee( @RequestBody List<Reservation> toSave){
 
         boolean isUpdate = false;
 
@@ -36,6 +38,9 @@ public class ReservationController {
                     break;
                 }
             }
+
+            System.out.println("index " +reservationIndex);
+            System.out.println("Date" +  newRes.getReservationDate());
 
             //By this time
             //If reservationIndex is still 0, then update
@@ -52,10 +57,10 @@ public class ReservationController {
                     if(
                         res.getRoomNumber() == newRes.getRoomNumber()
                         &&
-                        res.getReservationDate() == newRes.getReservationDate()
+                        res.getReservationDate().equals(newRes.getReservationDate())
                     ) {
                         return new ResponseEntity<>(
-                            "Room " + res.getRoomNumber() +" is already taken on " + res.getReservationDate()
+                            "Room_" + res.getRoomNumber() +"_is already taken on_" + res.getReservationDate()
                             , HttpStatus.BAD_REQUEST );
                     }
                 }
